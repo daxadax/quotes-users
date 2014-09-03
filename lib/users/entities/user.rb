@@ -10,7 +10,7 @@ module Users
                   :added
 
       def initialize(nickname, email, password, privacy, options = {})
-        ensure_valid_input!(nickname, email, password)
+        ensure_valid_input!(nickname, email, password, privacy)
 
         @nickname   = nickname
         @email      = email
@@ -28,12 +28,13 @@ module Users
 
       private
 
-      def ensure_valid_input!(nickname, email, password)
+      def ensure_valid_input!(nickname, email, password, privacy)
         msg = 'Missing required input'
 
         raise_argument_error(msg, :nickname) if nickname.nil? || nickname.empty?
         raise_argument_error(msg, :email)    if email.nil?    || email.empty?
         raise_argument_error(msg, :password) if password.nil? || password.empty?
+        raise_argument_error(msg, :privacy)  if privacy.nil?  || privacy.empty?
       end
 
     end
