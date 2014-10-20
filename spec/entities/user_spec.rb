@@ -8,8 +8,7 @@ class UserSpec < Minitest::Spec
     it 'can be built with four arguments' do
       assert_equal 'nickname',  user.nickname
       assert_equal 'email',     user.email
-      assert_equal 'password',  user.password
-      assert_equal :private,    user.privacy
+      assert_equal 'auth_key',  user.auth_key
     end
 
     it "has sane defaults for non-required arguments" do
@@ -20,10 +19,9 @@ class UserSpec < Minitest::Spec
     end
 
     it "fails without required arguments" do
-      assert_failure { Entities::User.new(nil,    'email', 'pass', :private) }
-      assert_failure { Entities::User.new('name', nil,     'pass', :private) }
-      assert_failure { Entities::User.new('name', 'email', nil,    :private) }
-      assert_failure { Entities::User.new('name', 'email', 'pass', nil    )  }
+      assert_failure { Entities::User.new(nil,    'email', 'auth_key' ) }
+      assert_failure { Entities::User.new('name', nil,     'auth_key' ) }
+      assert_failure { Entities::User.new('name', 'email', nil    ) }
     end
 
     describe "with options" do
@@ -39,8 +37,7 @@ class UserSpec < Minitest::Spec
       it "builds users with details from the options hash if present" do
         assert_equal 'nickname',    user.nickname
         assert_equal 'email',       user.email
-        assert_equal 'password',    user.password
-        assert_equal :private,      user.privacy
+        assert_equal 'auth_key',    user.auth_key
         assert_equal 1,             user.uid
         assert_equal 3,             user.favorites.size
         assert_equal [23, 52, 99],  user.favorites

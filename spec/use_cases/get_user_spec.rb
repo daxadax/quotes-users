@@ -1,30 +1,32 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# class GetQuoteSpec < UseCaseSpec
+class GetUserSpec < UseCaseSpec
 
-#   let(:quote)     { create_quote }
-#   let(:input)     { {:id => quote.id} }
-#   let(:use_case)  { UseCases::GetQuote.new(input) }
+  let(:user)      { create_user }
+  let(:input)     { {:uid => user.uid} }
+  let(:use_case)  { UseCases::GetUser.new(input) }
 
-#   describe "call" do
-#     let(:result) { use_case.call }
+  describe "call" do
+    let(:result) { use_case.call }
 
-#     describe "with unexpected input" do
-#       let(:quote) { build_quote }
+    describe "with unexpected input" do
+      let(:user) { build_user }
 
-#       it "fails" do
-#         assert_failure { result }
-#       end
-#     end
+      it "fails" do
+        assert_failure { result }
+      end
+    end
 
-#     it "retrieves the quote with the given quote_id as a bound object" do
-#       assert_kind_of UseCases::GetQuote::Result, result
+    it "retrieves the user with the given user uid as a bound object" do
+      assert_kind_of UseCases::GetUser::Result, result
 
-#       assert_equal quote.id,      result.quote.id
-#       assert_equal quote.author,  result.quote.author
-#       assert_equal quote.title,   result.quote.title
-#       assert_equal quote.content, result.quote.content
-#     end
-#   end
+      assert_equal user.uid,              result.user.uid
+      assert_equal user.nickname,         result.user.nickname
+      assert_equal user.email,            result.user.email
+      assert_equal user.favorites,        result.user.favorites
+      assert_equal user.added,            result.user.added_quotes
+      assert_equal user.terms_accepted?,  result.user.terms_accepted
+    end
+  end
 
-# end
+end

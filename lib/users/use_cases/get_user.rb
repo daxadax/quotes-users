@@ -1,36 +1,38 @@
-# require 'quotes/services/quote_boundary'
+require 'users/services/user_boundary'
 
-# module Quotes
-#   module UseCases
-#     class GetQuote < UseCase
+module Users
+  module UseCases
+    class GetUser < UseCase
 
-#       Quote   = Services::QuoteBoundary::Quote
-#       Result  = Bound.required( :quote => Quote )
+      User   = Services::UserBoundary::User
+      Result  = Bound.required( :user => User )
 
-#       def initialize(input)
-#         ensure_valid_input!(input[:id])
+      def initialize(input)
+        ensure_valid_input!(input[:uid])
 
-#         @id = input[:id]
-#       end
+        @uid = input[:uid]
+      end
 
-#       def call
-#         Result.new(:quote => get_quote)
-#       end
+      def call
+        Result.new(:user => get_user)
+      end
 
-#       private
+      private
 
-#       def get_quote
-#         quote = gateway.get(@id)
+      def get_user
+        user = gateway.get(@uid)
 
-#         quote_boundary.for quote
-#       end
+        user_boundary.for user
+      end
 
-#       def ensure_valid_input!(id)
-#         reason = "The given Quote ID is invalid"
+      def ensure_valid_input!(uid)
+        reason = "The given User UID is invalid"
 
-#         raise_argument_error(reason, id) unless id.kind_of? Integer || id.nil?
-#       end
+        unless uid.kind_of? Integer || uid.nil?
+          raise_argument_error(reason, uid)
+        end
+      end
 
-#     end
-#   end
-# end
+    end
+  end
+end

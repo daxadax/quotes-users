@@ -3,13 +3,13 @@ module Users
     class UseCase
       include Support::ValidationHelpers
 
-      # def gateway
-      #   @gateway ||= Gateways::QuotesGateway.new
-      # end
+      def gateway
+        @gateway ||= Gateways::UserGateway.new
+      end
 
-      # def quote_boundary
-      #   @boundary ||= Services::QuoteBoundary.new
-      # end
+      def user_boundary
+        @boundary ||= Services::UserBoundary.new
+      end
 
     end
   end
