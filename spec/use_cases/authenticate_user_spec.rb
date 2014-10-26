@@ -40,14 +40,12 @@ class AuthenticateUserSpec < UseCaseSpec
     end
 
     describe "matching user is found" do
-      before do
-        use_case.call
-      end
+      before { create_user }
 
       describe "when auth_keys match" do
         it "returns the user's uid" do
           assert_nil    result.error
-          assert_equal  'x', result.user_uid
+          assert_equal  1, result.user_uid
         end
       end
 

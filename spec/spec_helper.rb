@@ -30,6 +30,14 @@ class FakeGatewayBackend
     @memories[uid]
   end
 
+  def fetch(nickname)
+    user = @memories.select do |uid, values|
+      values[:nickname] == nickname
+    end
+
+    user.values.first
+  end
+
   def all
     @memories.values
   end

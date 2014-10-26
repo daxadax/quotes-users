@@ -27,11 +27,13 @@ module Users
       end
 
       def user_uid
-        return nil if error
+        return nil if @authenticator.kind_of?(Symbol)
+        @authenticator
       end
 
       def error
         return nil if @authenticator.kind_of?(Integer)
+        @authenticator
       end
 
       def nickname
