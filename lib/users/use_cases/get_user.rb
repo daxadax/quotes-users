@@ -4,7 +4,7 @@ module Users
   module UseCases
     class GetUser < UseCase
 
-      User   = Services::UserBoundary::User
+      User    = Services::UserBoundary::User
       Result  = Bound.required( :user => User )
 
       def initialize(input)
