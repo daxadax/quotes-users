@@ -16,6 +16,10 @@ module Users
         deserialize(@backend.get(id))
       end
 
+      def fetch(nickname)
+        deserialize(@backend.fetch(nickname))
+      end
+
       def update(user)
         ensure_persisted!(user.uid, 'update')
 

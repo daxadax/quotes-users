@@ -54,6 +54,21 @@ class UserGatewaySpec < Minitest::Spec
     end
   end
 
+  describe "fetch" do
+    it "returns nil if no user is found" do
+      assert_nil gateway.fetch('nickname')
+    end
+
+    it "returns the user with the given nickname" do
+      add_user
+
+      fetched_user = gateway.fetch(user.nickname)
+      assert_equal user.nickname, fetched_user.nickname
+      assert_equal user.email,    fetched_user.email
+      assert_equal user.auth_key, fetched_user.auth_key
+    end
+  end
+
   describe "update" do
 
     describe "without a persisted object" do
@@ -153,7 +168,11 @@ class UserGatewaySpec < Minitest::Spec
     end
 
     def get(uid)
-      @memory.select{ |u| u[:uid] == uid}.first
+      @memory.select { |u| u[:uid] == uid }.first
+    end
+
+    def fetch(nickname)
+      @memory.select { |u| u[:nickname] == nickname }.first
     end
 
     def update(user)
