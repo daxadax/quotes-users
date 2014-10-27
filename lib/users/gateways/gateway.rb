@@ -1,3 +1,4 @@
+require 'persistence'
 require 'json'
 
 module Users
@@ -6,7 +7,13 @@ module Users
       include Support::ValidationHelpers
 
       def backend_for_users
-        Gateways::UsersGatewayBackend.new
+        @users_gateway_backend ||= new_backend
+      end
+
+      private
+
+      def new_backend
+        Persistence::Gateways::UsersGatewayBackend.new
       end
 
     end
