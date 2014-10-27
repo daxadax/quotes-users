@@ -1,55 +1,55 @@
-# require 'bound'
+require 'bound'
 
-# module Quotes
-#   module UseCases
-#     class CreateQuote < UseCase
+module Users
+  module UseCases
+    class CreateUser < UseCase
 
-#       Success = Bound.required(:id)
-#       Failure = Bound.new
+      Success = Bound.required(:uid)
+      Failure = Bound.new
 
-#       def initialize(input)
-#         @quote = input[:quote]
-#       end
+      def initialize(input)
+        @user = input[:user]
+      end
 
-#       def call
-#         return Failure.new if invalid?
+      def call
+        return Failure.new if invalid?
 
-#         Success.new(:id => build_quote_and_add_to_gateway )
-#       end
+        Success.new(:uid => build_user_and_add_to_gateway )
+      end
 
-#       private
+      private
 
-#       def build_quote_and_add_to_gateway
-#         quote = build_quote
-#         add_to_gateway quote
-#       end
+      def build_user_and_add_to_gateway
+        user = build_user
+        add_to_gateway user
+      end
 
-#       def build_quote
-#         author  = quote.delete(:author)
-#         title   = quote.delete(:title)
-#         content = quote.delete(:content)
-#         options = quote
+      def build_user
+        nickname  = user.delete(:nickname)
+        email     = user.delete(:email)
+        auth_key  = user.delete(:auth_key)
+        options   = user
 
-#         Entities::Quote.new(author, title, content, options)
-#       end
+         Entities::User.new(nickname, email, auth_key, options)
+      end
 
-#       def add_to_gateway(quote)
-#         gateway.add quote
-#       end
+      def add_to_gateway(user)
+        gateway.add user
+      end
 
-#       def quote
-#         @quote
-#       end
+      def user
+        @user
+      end
 
-#       def invalid?
-#         return true if quote.nil? || quote.empty?
+      def invalid?
+        return true if user.nil? || user.empty?
 
-#         [quote[:author], quote[:title], quote[:content]].each do |required|
-#            return true if required.nil? || required.empty?
-#         end
-#         false
-#       end
+        [user[:nickname], user[:email], user[:auth_key]].each do |required|
+           return true if required.nil? || required.empty?
+        end
+        false
+      end
 
-#     end
-#   end
-# end
+    end
+  end
+end

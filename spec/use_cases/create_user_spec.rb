@@ -1,64 +1,63 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# class CreateQuoteSpec < UseCaseSpec
+class CreateUserSpec < UseCaseSpec
 
-#   let(:quote)     { build_serialized_quote(:no_json => true) }
-#   let(:input)     { {:quote => quote} }
-#   let(:use_case)  { UseCases::CreateQuote.new(input) }
+  let(:user)      { build_serialized_user }
+  let(:input)     { {:user => user} }
+  let(:use_case)  { UseCases::CreateUser.new(input) }
 
-#   describe "call" do
-#     let(:result)        { use_case.call }
-#     let(:loaded_quote)  { gateway.get(result.id) }
+  describe "call" do
+    let(:result)      { use_case.call }
+    let(:loaded_user) { gateway.get(result.uid) }
 
-#     describe "with unexpected input" do
-#       describe "without author" do
-#         before { quote.delete(:author) }
+    describe "with unexpected input" do
+      describe "without nickname" do
+        before { user.delete(:nickname) }
 
-#         it "fails" do
-#           assert_kind_of UseCases::CreateQuote::Failure, result
-#         end
-#       end
+        it "fails" do
+          assert_kind_of UseCases::CreateUser::Failure, result
+        end
+      end
 
-#       describe "without title" do
-#         before { quote.delete(:title) }
+      describe "without email" do
+        before { user.delete(:email) }
 
-#         it "fails" do
-#           assert_kind_of UseCases::CreateQuote::Failure, result
-#         end
-#       end
+        it "fails" do
+          assert_kind_of UseCases::CreateUser::Failure, result
+        end
+      end
 
-#       describe "without content" do
-#         before { quote.delete(:content) }
+      describe "without auth_key" do
+        before { user.delete(:auth_key) }
 
-#         it "fails" do
-#           assert_kind_of UseCases::CreateQuote::Failure, result
-#         end
-#       end
+        it "fails" do
+          assert_kind_of UseCases::CreateUser::Failure, result
+        end
+      end
 
-#       describe "with no input" do
-#         let(:quote) { nil }
+      describe "with no input" do
+        let(:user) { nil }
 
-#         it "fails" do
-#           assert_kind_of UseCases::CreateQuote::Failure, result
-#         end
-#       end
-#     end
+        it "fails" do
+          assert_kind_of UseCases::CreateUser::Failure, result
+        end
+      end
+    end
 
-#     it "builds a new quote and saves it to the database" do
-#       assert_kind_of UseCases::CreateQuote::Success, result
+    it "builds a new user and saves it to the database" do
+      assert_kind_of UseCases::CreateUser::Success, result
 
-#       assert_equal 1,         loaded_quote.id
-#       assert_equal 'Author',  loaded_quote.author
-#       assert_equal 'Title',   loaded_quote.title
-#       assert_equal 'Content', loaded_quote.content
-#       assert_equal false,     loaded_quote.starred
-#     end
+      assert_equal 1,           loaded_user.uid
+      assert_equal 'nickname',  loaded_user.nickname
+      assert_equal 'email',     loaded_user.email
+      assert_equal 'auth_key',  loaded_user.auth_key
+      assert_empty              loaded_user.favorites
+      assert_empty              loaded_user.added
+    end
 
-#     it "returns the id of the newly created quote on success" do
-#       assert_equal 1, result.id
-#     end
+    it "returns the uid of the newly created user on success" do
+      assert_equal 1, result.uid
+    end
 
-#   end
-
-
-# end
+  end
+end
