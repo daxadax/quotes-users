@@ -162,7 +162,7 @@ class UserGatewaySpec < Minitest::Spec
     def insert(user)
       user[:uid] = 'test_user_uid'
 
-      @memory << user
+      @memory << convert_booleans(user)
 
       user[:uid]
     end
@@ -177,7 +177,7 @@ class UserGatewaySpec < Minitest::Spec
 
     def update(user)
       @memory.delete_if {|u| u[:uid] == user[:uid]}
-      @memory << user
+      @memory << convert_booleans(user)
     end
 
     def all
@@ -188,16 +188,15 @@ class UserGatewaySpec < Minitest::Spec
       @memory.delete_if {|u| u[:uid] == uid}
     end
 
+    def convert_booleans(user)
+      if user[:terms] == true
+        user[:terms] = "1"
+      else
+        user[:terms] = "0"
+      end
+
+      user
+    end
+
   end
 end
-
-
-
-
-
-
-
-
-
-
-

@@ -111,7 +111,7 @@ module Users
           auth_key  = user[:auth_key]
           options   = {
             :uid          => user[:uid],
-            :terms        => user[:terms],
+            :terms        => user[:terms] == '1' ? true : false,
             :favorites    => JSON.parse(user[:favorites]),
             :added        => JSON.parse(user[:added])
           }
