@@ -17,12 +17,12 @@ module Support
 
     def build_serialized_user(options = {})
       {
-        :nickname   => options[:nickname]   ||'nickname',
-        :email      => options[:email]      ||'email',
-        :auth_key   => options[:auth_key]   ||'auth_key',
+        :nickname   => options[:nickname]   || 'nickname',
+        :email         => options[:email]      || 'email',
+        :auth_key => options[:auth_key]   || 'auth_key',
         :favorites  => options[:favorities] || [],
         :added      => options[:added]      || [],
-        :terms_accepted => true
+        :terms       => true
       }
     end
 
