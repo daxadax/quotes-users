@@ -1,4 +1,3 @@
-require 'persistence'
 require 'json'
 
 module Users
