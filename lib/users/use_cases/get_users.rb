@@ -1,22 +1,22 @@
-# require 'quotes/services/quote_boundary'
+require 'users/services/user_boundary'
 
-# module Quotes
-#   module UseCases
-#     class GetQuotes < UseCase
+module Users
+  module UseCases
+    class GetUsers < UseCase
 
-#       Quote   = Services::QuoteBoundary::Quote
-#       Result  = Bound.required( :quotes => [Quote] )
+      User     = Services::UserBoundary::User
+      Result  = Bound.required( :users => [User] )
 
-#       def call
-#         Result.new(:quotes => get_quotes)
-#       end
+      def call
+        Result.new(:users => get_users)
+      end
 
-#       private
+      private
 
-#       def get_quotes
-#         gateway.all.map { |quote| quote_boundary.for quote }
-#       end
+      def get_users
+        gateway.all.map { |user| user_boundary.for user }
+      end
 
-#     end
-#   end
-# end
+    end
+  end
+end
