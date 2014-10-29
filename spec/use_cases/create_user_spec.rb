@@ -3,8 +3,14 @@ require 'spec_helper'
 class CreateUserSpec < UseCaseSpec
 
   let(:user)      { build_serialized_user }
-  let(:input)     { {:user => user} }
   let(:use_case)  { UseCases::CreateUser.new(input) }
+  let(:input) do
+    {
+      :nickname => 'nickname',
+      :email => 'email',
+      :auth_key => 'auth_key'
+    }
+  end
 
   describe "call" do
     let(:result)      { use_case.call }
@@ -12,7 +18,7 @@ class CreateUserSpec < UseCaseSpec
 
     describe "with unexpected input" do
       describe "without nickname" do
-        before { user.delete(:nickname) }
+        before { input.delete(:nickname) }
 
         it "fails" do
           assert_kind_of UseCases::CreateUser::Failure, result
@@ -20,7 +26,7 @@ class CreateUserSpec < UseCaseSpec
       end
 
       describe "without email" do
-        before { user.delete(:email) }
+        before { input.delete(:email) }
 
         it "fails" do
           assert_kind_of UseCases::CreateUser::Failure, result
@@ -28,15 +34,7 @@ class CreateUserSpec < UseCaseSpec
       end
 
       describe "without auth_key" do
-        before { user.delete(:auth_key) }
-
-        it "fails" do
-          assert_kind_of UseCases::CreateUser::Failure, result
-        end
-      end
-
-      describe "with no input" do
-        let(:user) { nil }
+        before { input.delete(:auth_key) }
 
         it "fails" do
           assert_kind_of UseCases::CreateUser::Failure, result

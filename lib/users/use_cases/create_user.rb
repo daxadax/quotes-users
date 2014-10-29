@@ -8,7 +8,10 @@ module Users
       Failure = Bound.new
 
       def initialize(input)
-        @user = input[:user]
+        @nickname = input.delete(:nickname)
+        @email = input.delete(:email)
+        @auth_key = input.delete(:auth_key)
+        @options = input
       end
 
       def call
@@ -25,11 +28,6 @@ module Users
       end
 
       def build_user
-        nickname  = user.delete(:nickname)
-        email     = user.delete(:email)
-        auth_key  = user.delete(:auth_key)
-        options   = user
-
          Entities::User.new(nickname, email, auth_key, options)
       end
 
@@ -37,17 +35,27 @@ module Users
         gateway.add user
       end
 
-      def user
-        @user
-      end
-
       def invalid?
-        return true if user.nil? || user.empty?
-
-        [user[:nickname], user[:email], user[:auth_key]].each do |required|
+        [nickname, email, auth_key].each do |required|
            return true if required.nil? || required.empty?
         end
         false
+      end
+
+      def nickname
+        @nickname
+      end
+
+      def email
+        @email
+      end
+
+      def auth_key
+        @auth_key
+      end
+
+      def options
+        @options
       end
 
     end
