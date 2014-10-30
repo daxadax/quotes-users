@@ -1,56 +1,86 @@
-# require 'bound'
+require 'bound'
 
-# module Quotes
-#   module UseCases
-#     class UpdateQuote < UseCase
+module Users
+  module UseCases
+    class UpdateUser < UseCase
 
-#       Success = Bound.required(:id)
-#       Failure = Bound.new
+      Result = Bound.new(:error, :uid)
 
-#       def initialize(input)
-#         @quote = input[:quote]
-#       end
+      def initialize(input)
+        ensure_valid_input!(input)
 
-#       def call
-#         return Failure.new if invalid?
+        @uid = input[:uid]
+        @updates = input[:updates]
+        @auth_key = input[:auth_key]
+        @error = nil
+      end
 
-#         Success.new(:id => update_quote )
-#       end
+      def call
+        user = gateway.get(uid)
 
-#       private
+        return failure(:user_not_found) unless user
+        return failure(:auth_failure) unless authentic?(user.nickname)
 
-#       def update_quote
-#         quote = build_quote
-#         add_to_gateway quote
-#       end
+        Result.new(:error => nil, :uid => update_user )
+      end
 
-#       def build_quote
-#         author  = quote.delete(:author)
-#         title   = quote.delete(:title)
-#         content = quote.delete(:content)
-#         options = quote
+      private
 
-#         Entities::Quote.new(author, title, content, options)
-#       end
+      def failure(error)
+        Result.new(:error => error, :uid => nil)
+      end
 
-#       def add_to_gateway(quote)
-#         gateway.update quote
-#       end
+      def authentic?(nickname)
+        auth = Services::Authenticator.new.for(nickname, auth_key)
+        auth == :auth_failure ? false : true
+      end
 
-#       def quote
-#         @quote
-#       end
+      def update_user
+        user = build_user
+        add_to_gateway user
+      end
 
-#       def invalid?
-#         return true if quote.nil? || quote.empty?
-#         return true if quote[:id].nil? || !quote[:id].kind_of?(Integer)
+      def build_user
+        old_user = gateway.get(uid)
 
-#         [quote[:author], quote[:title], quote[:content]].each do |required|
-#           return true if required.nil? || required.empty?
-#         end
-#         false
-#       end
+        nickname  = updates.fetch(:nickname) { old_user.nickname }
+        email  = updates.delete(:email) { old_user.email }
+        auth_key = updates.delete(:auth_key) { old_user.auth_key }
+        options = updates.merge(:uid => old_user.uid)
 
-#     end
-#   end
-# end
+        Entities::User.new(nickname, email, auth_key, options)
+      end
+
+      def add_to_gateway(user)
+        gateway.update user
+      end
+
+      def error
+          @error
+      end
+
+      def uid
+        @uid
+      end
+
+      def updates
+        @updates
+      end
+
+      def auth_key
+        @auth_key
+      end
+
+      def ensure_valid_input!(input)
+        input.each_pair do |key, value|
+          reason = "The given #{key} was blank or missing"
+
+          if value.nil? || (value.kind_of?(String) && value.empty?)
+            raise_argument_error(reason, value)
+          end
+        end
+      end
+
+    end
+  end
+end

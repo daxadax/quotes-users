@@ -1,78 +1,90 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# class UpdateQuoteSpec < UseCaseSpec
+class UpdateUserSpec < UseCaseSpec
+    before { create_user }
+    let(:user_uid) { 1 }
+    let(:updates) do
+      {}
+    end
+    let(:auth_key) { 'auth_key' }
+    let(:input) do
+        {
+            :uid => user_uid,
+            :updates => updates,
+            :auth_key => auth_key
+        }
+    end
+    let(:use_case)  { UseCases::UpdateUser.new(input) }
 
-#   let(:options) do
-#     {
-#       :id       => 1,
-#       :author   => 'updated author',
-#       :content  => 'updated content',
-#       :tags     => ['some', 'updated', 'tags'],
-#       :no_json  => true
-#     }
-#   end
-#   let(:quote)     { build_serialized_quote(options) }
-#   let(:input)     { {:quote => quote} }
-#   let(:use_case)  { UseCases::UpdateQuote.new(input) }
+    describe "call" do
+        let(:result)              { use_case.call }
+        let(:loaded_user)   { gateway.get(result.uid) }
 
-#   describe "call" do
-#     let(:result)        { use_case.call }
-#     let(:loaded_quote)  { gateway.get(result.id) }
+        describe 'with invalid arguments' do
+            let(:auth_key) { '' }
 
-#     describe "with unexpected input" do
-#       describe "without author" do
-#         before { quote.delete(:author) }
+            it 'fails' do
+                assert_failure { result }
+            end
+        end
 
-#         it "fails" do
-#           assert_kind_of UseCases::UpdateQuote::Failure, result
-#         end
-#       end
+        describe 'with a non-existent user' do
+          let(:user_uid) { 23 }
 
-#       describe "without title" do
-#         before { quote.delete(:title) }
+          it 'returns a :user_not_found error' do
+            assert_equal :user_not_found, result.error
+            assert_nil result.uid
+          end
+        end
 
-#         it "fails" do
-#           assert_kind_of UseCases::UpdateQuote::Failure, result
-#         end
-#       end
+        describe 'when authentication fails' do
+          let(:auth_key) { 'invalid_auth_key' }
 
-#       describe "without content" do
-#         before { quote.delete(:content) }
+            it 'returns an :auth_failure error' do
+                assert_equal :auth_failure, result.error
+                assert_nil result.uid
+            end
+        end
 
-#         it "fails" do
-#           assert_kind_of UseCases::UpdateQuote::Failure, result
-#         end
-#       end
+        describe 'when authentication succeeds' do
 
-#       describe "with no input" do
-#         let(:quote) { nil }
+            describe 'nickname?' do
+              let(:updates) do
+                { :nickname => 'new nickname' }
+              end
 
-#         it "fails" do
-#           assert_kind_of UseCases::UpdateQuote::Failure, result
-#         end
-#       end
-#     end
+              it 'can be updated' do
+                assert_nil      result.error
+                assert_equal user_uid,              result.uid
+                assert_equal "new nickname", loaded_user.nickname
+              end
+            end
 
-#     describe "with correct input" do
-#       before { create_quote }
+            describe 'auth_key?' do
+              let(:updates) do
+                { :auth_key => 'new auth_key' }
+              end
 
-#       it "updates the given quote" do
-#         assert_kind_of UseCases::UpdateQuote::Success, result
+              it 'can be updated' do
+                assert_nil      result.error
+                assert_equal user_uid,              result.uid
+                assert_equal "new auth_key", loaded_user.auth_key
+              end
+            end
 
-#         assert_equal 1,                 loaded_quote.id
-#         assert_equal 'updated author',  loaded_quote.author
-#         assert_equal 'Title',           loaded_quote.title
-#         assert_equal 'updated content', loaded_quote.content
-#         assert_equal false,             loaded_quote.starred
-#         assert_equal 3,                 loaded_quote.tags.size
-#       end
+            describe 'email?' do
+              let(:updates) do
+                { :email => 'new email' }
+              end
 
-#       it "returns the id of the updated quote on success" do
-#         assert_equal 1, result.id
-#       end
-#     end
+              it 'can be updated' do
+                assert_nil      result.error
+                assert_equal user_uid,              result.uid
+                assert_equal "new email", loaded_user.email
+              end
+            end
 
-#   end
+        end
 
-
-# end
+    end
+end
