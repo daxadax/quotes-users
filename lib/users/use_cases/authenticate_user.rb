@@ -4,7 +4,7 @@ module Users
 
       Result = Bound.required(
         :error,
-        :user_uid
+        :uid
       )
 
       def initialize(input)
@@ -17,7 +17,7 @@ module Users
       def call
         authenticate_user
 
-        Result.new(:error => error, :user_uid => user_uid)
+        Result.new(:error => error, :uid => user_uid)
       end
 
       private
