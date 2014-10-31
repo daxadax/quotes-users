@@ -32,7 +32,7 @@ module Users
 
       def authentic?(nickname)
         auth = Services::Authenticator.new.for(nickname, auth_key)
-        auth == :auth_failure ? false : true
+        auth == uid ? true : false
       end
 
       def update_user
