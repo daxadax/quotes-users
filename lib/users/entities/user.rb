@@ -11,13 +11,13 @@ module Users
       def initialize(nickname, email, auth_key, options = {})
         ensure_valid_input!(nickname, email, auth_key)
 
-        @nickname   = nickname
-        @email      = email
-        @auth_key   = auth_key
-        @uid        = options[:uid]       || nil
-        @favorites  = options[:favorites] || []
-        @added      = options[:added]     || []
-        @terms      = options[:terms]     || false
+        @nickname = nickname
+        @email = email
+        @auth_key = auth_key
+        @uid = options[:uid] || nil
+        @favorites = options[:favorites] || []
+        @added = options[:added] || []
+        @terms = options[:terms] || false
       end
 
       def terms_accepted?
