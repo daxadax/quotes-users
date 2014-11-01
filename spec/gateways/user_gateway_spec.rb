@@ -2,18 +2,9 @@ require 'spec_helper'
 
 class UserGatewaySpec < Minitest::Spec
 
-  let(:backend)   { FakeBackend.new }
-  let(:gateway)   { Gateways::UserGateway.new(backend) }
-  let(:user)      { build_user }
-
-  let(:updated_user) do
-    build_user(
-      :uid         => 1,
-      :terms      => true,
-      :favorites  => [23, 410],
-      :added      => [23]
-    )
-  end
+  let(:backend) { FakeBackend.new }
+  let(:gateway) { Gateways::UserGateway.new(backend) }
+  let(:user) { build_user }
   let(:add_user) { gateway.add(user) }
 
   describe "add" do
@@ -70,28 +61,44 @@ class UserGatewaySpec < Minitest::Spec
   end
 
   describe "update" do
-
     describe "without a persisted object" do
       it "fails" do
         assert_failure { gateway.update(user) }
       end
     end
 
-  it "updates any changed attributes" do
-    user_uid = add_user
-    gateway.update(updated_user)
-    result = gateway.get(updated_user.uid)
+    it "updates any changed attributes" do
+      user_uid = add_user
+      gateway.update(updated_user(user_uid))
+      result = gateway.get(user_uid)
 
-    refute_equal user,          result
-    assert_equal 1,             result.uid
-    assert_equal user.nickname, result.nickname
-    assert_equal user.email,    result.email
-    assert_equal user.auth_key, result.auth_key
-    assert_equal true,          result.terms_accepted?
-    assert_equal [23, 410],     result.favorites
-    assert_equal [23],          result.added
+      refute_equal user, result
+      assert_equal user_uid, result.uid
+      assert_equal user.nickname, result.nickname
+      assert_equal 'new email', result.email
+    end
   end
 
+  describe 'publish_quote' do
+    let(:published_quote_uid) { 13 }
+
+    describe 'without a persisted object' do
+      let(:wrong_user_uid) { 90 }
+
+      it 'fails' do
+        assert_failure do
+          gateway.publish_quote(wrong_user_uid, published_quote_uid)
+        end
+      end
+    end
+
+    it 'adds the published quote to the :added array for the given user' do
+      user_uid = add_user
+      gateway.publish_quote(user_uid, published_quote_uid)
+      result = gateway.get(user_uid)
+
+      assert_includes result.added, published_quote_uid
+    end
   end
 
   describe "all" do
@@ -137,7 +144,7 @@ class UserGatewaySpec < Minitest::Spec
     end
 
     it "adds or removes a quote uid to/from the user's favorites" do
-      uid       = gateway.add(user)
+      uid = gateway.add(user)
       quote_uid = '23'
 
       user = gateway.get(uid)
@@ -151,6 +158,13 @@ class UserGatewaySpec < Minitest::Spec
       user = gateway.get(uid)
       assert_equal false, user.favorites.include?(quote_uid)
     end
+  end
+
+  def updated_user(uid)
+    build_user(
+      :uid => uid,
+      :email => 'new email'
+    )
   end
 
   class FakeBackend

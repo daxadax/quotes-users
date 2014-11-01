@@ -12,8 +12,8 @@ module Users
         @backend.insert(serialized(user))
       end
 
-      def get(id)
-        deserialize(@backend.get(id))
+      def get(uid)
+        deserialize(@backend.get(uid))
       end
 
       def fetch(nickname)
@@ -22,6 +22,14 @@ module Users
 
       def update(user)
         ensure_persisted!(user.uid, 'update')
+
+        @backend.update(serialized(user))
+      end
+
+      def publish_quote(uid, quote_uid)
+        user = get(uid)
+        raise_argument_error('no user found', uid) unless user
+        user.added << quote_uid
 
         @backend.update(serialized(user))
       end
@@ -93,13 +101,13 @@ module Users
 
         def self.dump(user)
           {
-            :uid        => user.uid,
-            :nickname   => user.nickname,
-            :email      => user.email,
-            :auth_key   => user.auth_key,
-            :terms      => user.terms_accepted?,
-            :favorites  => JSON.dump(user.favorites),
-            :added      => JSON.dump(user.added)
+            :uid => user.uid,
+            :nickname => user.nickname,
+            :email => user.email,
+            :auth_key => user.auth_key,
+            :terms => user.terms_accepted?,
+            :favorites => JSON.dump(user.favorites),
+            :added => JSON.dump(user.added)
           }
         end
 
@@ -110,18 +118,16 @@ module Users
           email     = user[:email]
           auth_key  = user[:auth_key]
           options   = {
-            :uid          => user[:uid],
-            :terms        => user[:terms] == '1' ? true : false,
-            :favorites    => JSON.parse(user[:favorites]),
-            :added        => JSON.parse(user[:added])
+            :uid => user[:uid],
+            :terms => user[:terms] == '1' ? true : false,
+            :favorites => JSON.parse(user[:favorites]),
+            :added => JSON.parse(user[:added])
           }
 
           Entities::User.new(nickname, email, auth_key, options)
         end
 
       end
-
-
     end
   end
 end
