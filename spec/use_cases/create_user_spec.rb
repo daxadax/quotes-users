@@ -21,7 +21,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:nickname) }
 
         it "fails" do
-          assert_kind_of UseCases::CreateUser::Failure, result
+          assert_failure { result }
         end
       end
 
@@ -29,7 +29,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:email) }
 
         it "fails" do
-          assert_kind_of UseCases::CreateUser::Failure, result
+          assert_failure { result }
         end
       end
 
@@ -37,7 +37,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:auth_key) }
 
         it "fails" do
-          assert_kind_of UseCases::CreateUser::Failure, result
+          assert_failure { result }
         end
       end
     end
@@ -45,12 +45,12 @@ class CreateUserSpec < UseCaseSpec
     it "builds a new user and saves it to the database" do
       assert_kind_of UseCases::CreateUser::Success, result
 
-      assert_equal 1,           loaded_user.uid
+      assert_equal 1, loaded_user.uid
       assert_equal 'nickname',  loaded_user.nickname
-      assert_equal 'email',     loaded_user.email
-      assert_equal 'auth_key',  loaded_user.auth_key
-      assert_empty              loaded_user.favorites
-      assert_empty              loaded_user.added
+      assert_equal 'email', loaded_user.email
+      assert_equal 'auth_key', loaded_user.auth_key
+      assert_empty loaded_user.favorites
+      assert_empty loaded_user.added
     end
 
     it "returns the uid of the newly created user on success" do

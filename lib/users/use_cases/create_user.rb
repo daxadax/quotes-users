@@ -37,7 +37,9 @@ module Users
 
       def invalid?
         [nickname, email, auth_key].each do |required|
-           return true if required.nil? || required.empty?
+          if required.nil? || required.empty?
+            raise_argument_error('Missing required input', required)
+          end
         end
         false
       end
