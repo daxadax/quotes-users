@@ -1,25 +1,21 @@
-# module Quotes
-#   module UseCases
-#     class DeleteQuote < UseCase
+module Users
+  module UseCases
+    class DeleteUser < UseCase
 
-#       def initialize(input)
-#         ensure_valid_input!(input[:id])
+      def initialize(input)
+        @uid = input[:uid]
+      end
 
-#         @id = input[:id]
-#       end
+      def call
+        gateway.delete(uid)
+      end
 
-#       def call
-#         gateway.delete(@id)
-#       end
+      private
 
-#       private
+      def uid
+        @uid
+      end
 
-#       def ensure_valid_input!(id)
-#         reason = "The given Quote ID is invalid"
-
-#         raise_argument_error(reason, id) unless id.kind_of? Integer || id.nil?
-#       end
-
-#     end
-#   end
-# end
+    end
+  end
+end
