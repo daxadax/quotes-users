@@ -11,7 +11,7 @@ class AuthenticatorSpec < Minitest::Spec
     let(:nickname) { 'unknown_user' }
 
     it "returns an error key but no user" do
-      assert_equal :not_found, result
+      assert_equal :user_not_found, result
     end
   end
 

@@ -9,7 +9,7 @@ module Users
       def for(nickname, auth_key)
         user = find_user(nickname)
 
-        return :not_found     unless user
+        return :user_not_found unless user
         return :auth_failure  unless user.auth_key == auth_key
 
         user.uid

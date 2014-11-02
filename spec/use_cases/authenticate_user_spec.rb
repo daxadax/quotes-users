@@ -34,8 +34,8 @@ class AuthenticateUserSpec < UseCaseSpec
 
     describe "no matching user is found" do
       it "returns an error message, but no user" do
-        assert_equal  :not_found, result.error
-        assert_nil    result.uid
+        assert_equal  :user_not_found, result.error
+        assert_nil result.uid
       end
     end
 
