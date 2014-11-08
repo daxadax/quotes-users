@@ -24,7 +24,6 @@ class PublishQuoteSpec < UseCaseSpec
         result = publish_quote
 
         assert_equal  :user_not_found, result.error
-        assert_nil result.uid
       end
     end
 

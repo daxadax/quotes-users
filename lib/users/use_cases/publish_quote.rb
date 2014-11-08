@@ -4,7 +4,7 @@ module Users
   module UseCases
     class PublishQuote < UseCase
 
-      Result = Bound.new(:error, :uid)
+      Result = Bound.new(:error)
 
       def initialize(input)
         ensure_valid_input!(input)
@@ -18,19 +18,19 @@ module Users
         user = gateway.get(uid)
         return failure(:user_not_found) unless user
 
-        Result.new(:error => nil, :uid => publish_quote )
+        publish_quote
       end
 
       private
 
       def failure(error)
-        Result.new(:error => error, :uid => nil)
+        Result.new(:error => error)
       end
 
       def publish_quote
         gateway.publish_quote uid, quote_uid
       end
-      
+
       def error
           @error
       end
@@ -47,9 +47,7 @@ module Users
         input.each_pair do |key, value|
           reason = "The given #{key} was blank or missing"
 
-          if value.nil? || (value.kind_of?(String) && value.empty?)
-            raise_argument_error(reason, value)
-          end
+          raise_argument_error(reason, value) if value.nil?
         end
       end
 
