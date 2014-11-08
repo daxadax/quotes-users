@@ -1,32 +1,48 @@
-# require 'spec_helper'
+require 'spec_helper'
 
-# class ToggleStarSpec < UseCaseSpec
+class ToggleFavoriteSpec < UseCaseSpec
+  let(:input) do
+    {
+      :uid => nil,
+      :quote_uid => 99
+    }
+  end
+  let(:use_case) do
+    UseCases::ToggleFavorite.new(input)
+  end
 
-#   let(:quote)           { create_quote }
-#   let(:updated_quote)   { gateway.get(quote.id) }
-#   let(:input) do
-#     {
-#       :id  => quote.id
-#     }
-#   end
-#   let(:use_case)  { UseCases::ToggleStar.new(input) }
+  describe "call" do
 
-#   describe "call" do
+    describe "with an unpersisted user" do
+      before do
+        user_uid = create_user.uid
+        input[:uid] = user_uid + 23
+      end
 
-#     describe "with unexpected input" do
-#       let(:quote) { build_quote }
+      it "returns an error message, but does not update anything" do
+        result = use_case.call
 
-#       it "fails" do
-#         assert_failure { use_case.call }
-#       end
-#     end
+        assert_equal  :user_not_found, result.error
+      end
+    end
 
-#     it "toggles 'starred' for the given quote" do
-#       assert_equal false, quote.starred
-#       use_case.call
+    describe "with correct input and a persisted user" do
 
-#       assert_equal true,  updated_quote.starred
-#     end
-#   end
+      it "adds or removes the given quote from the given user's favorites" do
+        user_uid = create_user.uid
+        input[:uid] = user_uid
+        use_case.call
+        user = gateway.get(user_uid)
 
-# end
+        assert_includes user.favorites, input[:quote_uid]
+
+        use_case.call
+        user = gateway.get(user_uid)
+
+        refute_includes user.favorites, input[:quote_uid]
+      end
+    end
+
+  end
+
+end
