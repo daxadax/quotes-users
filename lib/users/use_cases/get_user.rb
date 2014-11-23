@@ -5,32 +5,32 @@ module Users
     class GetUser < UseCase
 
       User    = Services::UserBoundary::User
-      Result  = Bound.required( :user => User )
+      Result  = Bound.required(:error, :user => User )
 
       def initialize(input)
-        ensure_valid_input!(input[:uid])
-
         @uid = input[:uid]
       end
 
       def call
-        Result.new(:user => get_user)
+        Result.new(:error => error, :user => get_user)
       end
 
       private
 
+      def error
+        return :invalid_input unless valid?
+      end
+
       def get_user
+        return nil unless valid?
         user = gateway.get(@uid)
 
         user_boundary.for user
       end
 
-      def ensure_valid_input!(uid)
-        reason = "The given User UID is invalid"
-
-        unless uid.kind_of? Integer || uid.nil?
-          raise_argument_error(reason, uid)
-        end
+      def valid?(uid)
+        return true unless uid.kind_of? Integer || uid.nil?
+        false
       end
 
     end

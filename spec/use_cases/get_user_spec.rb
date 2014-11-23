@@ -13,7 +13,8 @@ class GetUserSpec < UseCaseSpec
       let(:user) { build_user }
 
       it "fails" do
-        assert_failure { result }
+        assert_nil result.user
+        assert_equal :invalid_input, result.error
       end
     end
 
