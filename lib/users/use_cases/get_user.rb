@@ -23,12 +23,16 @@ module Users
 
       def get_user
         return nil unless valid?
-        user = gateway.get(@uid)
+        user = gateway.get(uid)
 
         user_boundary.for user
       end
 
-      def valid?(uid)
+      def uid
+        @uid
+      end
+
+      def valid?
         return true unless uid.kind_of? Integer || uid.nil?
         false
       end
