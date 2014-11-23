@@ -43,7 +43,7 @@ class CreateUserSpec < UseCaseSpec
     end
 
     it "builds a new user and saves it to the database" do
-      assert_kind_of UseCases::CreateUser::Success, result
+      assert_nil result.error
 
       assert_equal 1, loaded_user.uid
       assert_equal 'nickname',  loaded_user.nickname
@@ -54,6 +54,7 @@ class CreateUserSpec < UseCaseSpec
     end
 
     it "returns the uid of the newly created user on success" do
+      assert_nil result.error
       assert_equal 1, result.uid
     end
 

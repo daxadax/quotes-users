@@ -4,8 +4,10 @@ module Users
   module UseCases
     class CreateUser < UseCase
 
-      Success = Bound.required(:uid)
-      Failure = Bound.new
+      Result = Bound.required(
+        :error,
+        :uid
+      )
 
       def initialize(input)
         @nickname = input.delete(:nickname)
@@ -15,14 +17,18 @@ module Users
       end
 
       def call
-        return Failure.new if invalid?
-
-        Success.new(:uid => build_user_and_add_to_gateway )
+        Result.new(:error => error, :uid => build_user_and_add_to_gateway )
       end
 
       private
 
+      def error
+        return :invalid_input if invalid?
+        nil
+      end
+
       def build_user_and_add_to_gateway
+        return nil if invalid?
         user = build_user
         add_to_gateway user
       end
