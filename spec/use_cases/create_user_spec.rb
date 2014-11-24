@@ -2,8 +2,8 @@ require 'spec_helper'
 
 class CreateUserSpec < UseCaseSpec
 
-  let(:user)      { build_serialized_user }
-  let(:use_case)  { UseCases::CreateUser.new(input) }
+  let(:user) { build_serialized_user }
+  let(:use_case) { UseCases::CreateUser.new(input) }
   let(:input) do
     {
       :nickname => 'nickname',
@@ -13,7 +13,7 @@ class CreateUserSpec < UseCaseSpec
   end
 
   describe "call" do
-    let(:result)      { use_case.call }
+    let(:result) { use_case.call }
     let(:loaded_user) { gateway.get(result.uid) }
 
     describe "with unexpected input" do
@@ -21,7 +21,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:nickname) }
 
         it "fails" do
-          assert_failure { result }
+          assert_equal :invalid_input, result.error
         end
       end
 
@@ -29,7 +29,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:email) }
 
         it "fails" do
-          assert_failure { result }
+          assert_equal :invalid_input, result.error
         end
       end
 
@@ -37,7 +37,7 @@ class CreateUserSpec < UseCaseSpec
         before { input.delete(:auth_key) }
 
         it "fails" do
-          assert_failure { result }
+          assert_equal :invalid_input, result.error
         end
       end
     end
@@ -48,7 +48,7 @@ class CreateUserSpec < UseCaseSpec
       assert_equal 1, loaded_user.uid
       assert_equal 'nickname',  loaded_user.nickname
       assert_equal 'email', loaded_user.email
-      assert_equal 'auth_key', loaded_user.auth_key
+      assert_equal BCrypt::Password.new(loaded_user.auth_key), "auth_key"
       assert_empty loaded_user.favorites
       assert_empty loaded_user.added
     end

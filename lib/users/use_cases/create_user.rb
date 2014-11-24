@@ -1,4 +1,5 @@
 require 'bound'
+require 'bcrypt'
 
 module Users
   module UseCases
@@ -42,10 +43,8 @@ module Users
       end
 
       def invalid?
-        [nickname, email, auth_key].each do |required|
-          if required.nil? || required.empty?
-            raise_argument_error('Missing required input', required)
-          end
+        [nickname, email, @auth_key].each do |required|
+          return true if required.nil? || required.empty?
         end
         false
       end
@@ -59,7 +58,7 @@ module Users
       end
 
       def auth_key
-        @auth_key
+        BCrypt::Password.create(@auth_key)
       end
 
       def options

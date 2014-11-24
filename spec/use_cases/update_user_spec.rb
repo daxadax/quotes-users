@@ -1,7 +1,6 @@
 require 'spec_helper'
 
 class UpdateUserSpec < UseCaseSpec
-    before { create_user }
     let(:user_uid) { 1 }
     let(:updates) do
       {}
@@ -17,8 +16,12 @@ class UpdateUserSpec < UseCaseSpec
     let(:use_case)  { UseCases::UpdateUser.new(input) }
 
     describe "call" do
-        let(:result)              { use_case.call }
-        let(:loaded_user)   { gateway.get(result.uid) }
+      before do
+        create_user :auth_key => BCrypt::Password.create('auth_key')
+      end
+
+      let(:result)              { use_case.call }
+      let(:loaded_user)   { gateway.get(result.uid) }
 
         describe 'with invalid arguments' do
             let(:auth_key) { '' }
@@ -54,8 +57,8 @@ class UpdateUserSpec < UseCaseSpec
               end
 
               it 'can be updated' do
-                assert_nil      result.error
-                assert_equal user_uid,              result.uid
+                assert_nil result.error
+                assert_equal user_uid, result.uid
                 assert_equal "new nickname", loaded_user.nickname
               end
             end
@@ -66,9 +69,9 @@ class UpdateUserSpec < UseCaseSpec
               end
 
               it 'can be updated' do
-                assert_nil      result.error
-                assert_equal user_uid,              result.uid
-                assert_equal "new auth_key", loaded_user.auth_key
+                assert_nil result.error
+                assert_equal user_uid, result.uid
+                assert_equal BCrypt::Password.new(loaded_user.auth_key), "new auth_key" 
               end
             end
 
@@ -78,8 +81,8 @@ class UpdateUserSpec < UseCaseSpec
               end
 
               it 'can be updated' do
-                assert_nil      result.error
-                assert_equal user_uid,              result.uid
+                assert_nil result.error
+                assert_equal user_uid, result.uid
                 assert_equal "new email", loaded_user.email
               end
             end

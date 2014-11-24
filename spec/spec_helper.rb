@@ -1,4 +1,5 @@
 require 'minitest/autorun'
+require 'bcrypt'
 
 $LOAD_PATH.unshift('lib', 'spec')
 
@@ -59,6 +60,7 @@ class FakeGatewayBackend
 
 end
 
+BCrypt::Engine::DEFAULT_COST = 1
 
 class Minitest::Spec
   include Support::AssertionHelpers

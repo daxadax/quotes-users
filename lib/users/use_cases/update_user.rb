@@ -1,4 +1,5 @@
 require 'bound'
+require 'bcrypt'
 
 module Users
   module UseCases
@@ -43,12 +44,14 @@ module Users
       def build_user
         old_user = gateway.get(uid)
 
-        nickname  = updates.fetch(:nickname) { old_user.nickname }
-        email  = updates.delete(:email) { old_user.email }
-        auth_key = updates.delete(:auth_key) { old_user.auth_key }
-        options = updates.merge(:uid => old_user.uid)
+        new_nickname  = updates.fetch(:nickname) { old_user.nickname }
+        new_email  = updates.delete(:email) { old_user.email }
+        new_auth_key = updates.delete(:auth_key) { old_user.auth_key }
+        new_options = updates.merge(:uid => old_user.uid)
 
-        Entities::User.new(nickname, email, auth_key, options)
+        new_auth_key = BCrypt::Password.create(new_auth_key)
+
+        Entities::User.new(new_nickname, new_email, new_auth_key, new_options)
       end
 
       def add_to_gateway(user)

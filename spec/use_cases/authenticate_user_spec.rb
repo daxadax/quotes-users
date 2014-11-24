@@ -40,7 +40,9 @@ class AuthenticateUserSpec < UseCaseSpec
     end
 
     describe "matching user is found" do
-      before { create_user }
+      before do
+        create_user :auth_key => BCrypt::Password.create('auth_key')
+      end
 
       describe "when auth_keys match" do
         it "returns the user's uid" do
@@ -54,7 +56,7 @@ class AuthenticateUserSpec < UseCaseSpec
 
         it "fails" do
           assert_equal  :auth_failure, result.error
-          assert_nil    result.uid
+          assert_nil result.uid
         end
       end
     end
