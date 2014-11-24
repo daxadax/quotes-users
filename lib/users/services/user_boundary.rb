@@ -21,11 +21,11 @@ module Users
 
       def build_boundary(user)
         User.new(
-          :uid            => user.uid,
-          :nickname       => user.nickname,
-          :email          => user.email,
-          :favorites      => user.favorites,
-          :added_quotes   => user.added,
+          :uid => user.uid,
+          :nickname => user.nickname,
+          :email => user.email,
+          :favorites => user.favorites,
+          :added_quotes => user.added,
           :terms_accepted => user.terms_accepted?
         )
       end
