@@ -1,5 +1,3 @@
-require 'bcrypt'
-
 module Support
   module FactoryHelpers
 
@@ -14,8 +12,7 @@ module Support
     def build_user(options = {})
       nickname = options[:nickname] || 'nickname'
       email = options[:email] || 'email'
-      unauth_key = options[:auth_key] || 'auth_key'
-      auth_key = BCrypt::Password.create(unauth_key)
+      auth_key = options[:auth_key] || 'auth_key'
 
       Users::Entities::User.new(
         nickname, email, auth_key, options
