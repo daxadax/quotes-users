@@ -3,9 +3,9 @@ require 'spec_helper'
 class AuthenticatorSpec < Minitest::Spec
   let(:nickname)      { 'nickname' }
   let(:auth_key)      { 'auth_key' }
-  let(:fake_gateway) { FakeGateway.new }
+  let(:fake_gateway)  { FakeGateway.new }
   let(:authenticator) { Services::Authenticator.new(fake_gateway) }
-  let(:result) { authenticator.for(nickname, auth_key) }
+  let(:result)        { authenticator.for(nickname, auth_key) }
 
   describe "no matching user is found" do
     let(:nickname) { 'unknown_user' }
@@ -16,7 +16,9 @@ class AuthenticatorSpec < Minitest::Spec
   end
 
   describe "matching user is found" do
-    before { fake_gateway.add_user(nickname, 'auth_key') }
+    before do
+      fake_gateway.add_user('nickname', 'auth_key')
+    end
 
     describe "auth_key does not match" do
       let(:auth_key) { 'wrong key' }
@@ -39,7 +41,7 @@ class AuthenticatorSpec < Minitest::Spec
     def add_user(nickname, auth_key)
       @memory[nickname] = OpenStruct.new(
         :uid      => "#{nickname}_uid",
-        :auth_key => BCrypt::Password.create(auth_key)
+        :auth_key => auth_key
       )
     end
 
