@@ -4,8 +4,8 @@ module Users
   module UseCases
     class GetUser < UseCase
 
-      User    = Services::UserBoundary::User
-      Result  = Bound.required(:error, :user => User )
+      User = Services::UserBoundary::User
+      Result = Bound.required(:error, :user => User )
 
       def initialize(input)
         @uid = input[:uid]
@@ -19,6 +19,7 @@ module Users
 
       def error
         return :invalid_input unless valid?
+        nil
       end
 
       def get_user
@@ -33,8 +34,9 @@ module Users
       end
 
       def valid?
-        return true unless uid.kind_of? Integer || uid.nil?
-        false
+        return false unless uid.kind_of? Integer
+        return false if uid.nil?
+        true
       end
 
     end

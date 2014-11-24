@@ -1,10 +1,9 @@
 require 'spec_helper'
 
 class GetUserSpec < UseCaseSpec
-
-  let(:user)      { create_user }
-  let(:input)     { {:uid => user.uid} }
-  let(:use_case)  { UseCases::GetUser.new(input) }
+  let(:user) { create_user }
+  let(:input) { {:uid => user.uid} }
+  let(:use_case) { UseCases::GetUser.new(input) }
 
   describe "call" do
     let(:result) { use_case.call }
@@ -19,14 +18,14 @@ class GetUserSpec < UseCaseSpec
     end
 
     it "retrieves the user with the given user uid as a bound object" do
-      assert_kind_of UseCases::GetUser::Result, result
+      assert_nil result.error
 
-      assert_equal user.uid,              result.user.uid
-      assert_equal user.nickname,         result.user.nickname
-      assert_equal user.email,            result.user.email
-      assert_equal user.favorites,        result.user.favorites
-      assert_equal user.added,            result.user.added_quotes
-      assert_equal user.terms_accepted?,  result.user.terms_accepted
+      assert_equal user.uid, result.user.uid
+      assert_equal user.nickname, result.user.nickname
+      assert_equal user.email, result.user.email
+      assert_equal user.favorites, result.user.favorites
+      assert_equal user.added, result.user.added_quotes
+      assert_equal user.terms_accepted?, result.user.terms_accepted
     end
   end
 
