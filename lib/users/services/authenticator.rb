@@ -9,7 +9,6 @@ module Users
       def for(nickname, auth_key)
         user = find_user(nickname)
 
-
         return :user_not_found unless user
         return :auth_failure  unless BCrypt::Password.new(user.auth_key) == auth_key
         user.uid
