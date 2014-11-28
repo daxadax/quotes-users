@@ -4,7 +4,7 @@ class UserGatewaySpec < Minitest::Spec
 
   let(:backend) { FakeBackend.new }
   let(:gateway) { Gateways::UserGateway.new(backend) }
-  let(:user) { build_user }
+  let(:user) { build_user :login_count => 23 }
   let(:add_user) { gateway.add(user) }
 
   describe "add" do
@@ -28,14 +28,17 @@ class UserGatewaySpec < Minitest::Spec
 
     it "serializes the user and delegates it to the backend" do
       user_uid  = add_user
-      result    = gateway.get(user_uid)
+      result = gateway.get(user_uid)
 
       assert_equal result.nickname, user.nickname
-      assert_equal result.email,    user.email
+      assert_equal result.email, user.email
       assert_equal result.auth_key, user.auth_key
       assert_empty result.favorites
       assert_empty result.added
-      assert_equal false,           result.terms_accepted?
+      assert_equal false, result.terms_accepted?
+      assert_equal nil, result.last_login_time
+      assert_equal nil, result.last_login_address
+      assert_equal 23, result.login_count
     end
   end
 
@@ -102,7 +105,7 @@ class UserGatewaySpec < Minitest::Spec
   end
 
   describe "all" do
-    let(:user_two)   { Entities::User.new('2', '2', '2') }
+    let(:user_two) { Entities::User.new('2', '2', '2') }
     let(:user_three) { Entities::User.new('3', '3', '3') }
     let(:users)      { [user, user_two, user_three] }
 
@@ -177,7 +180,6 @@ class UserGatewaySpec < Minitest::Spec
       user[:uid] = 'test_user_uid'
 
       @memory << convert_booleans(user)
-
       user[:uid]
     end
 
