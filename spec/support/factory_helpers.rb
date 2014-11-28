@@ -21,12 +21,15 @@ module Support
 
     def build_serialized_user(options = {})
       {
-        :nickname   => options[:nickname]   || 'nickname',
-        :email         => options[:email]      || 'email',
-        :auth_key => options[:auth_key]   || 'auth_key',
-        :favorites  => options[:favorities] || [],
-        :added      => options[:added]      || [],
-        :terms       => true
+        :nickname => options[:nickname] || 'nickname',
+        :email => options[:email] || 'email',
+        :auth_key => options[:auth_key] || 'auth_key',
+        :favorites => options[:favorities] || [],
+        :added => options[:added] || [],
+        :terms => true,
+        :last_login_time => options[:login_time] || 1234,
+        :last_login_address => options[:login_address] || '23.0.2.5',
+        :login_count => options[:login_count] || 23
       }
     end
 
