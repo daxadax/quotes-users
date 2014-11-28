@@ -2,11 +2,14 @@ module Users
   module Entities
     class User < Entity
       attr_reader :uid,
-                  :nickname,
-                  :email,
-                  :auth_key,
-                  :favorites,
-                  :added
+        :nickname,
+        :email,
+        :auth_key,
+        :favorites,
+        :added,
+        :last_login_time,
+        :last_login_address,
+        :login_count
 
       def initialize(nickname, email, auth_key, options = {})
         ensure_valid_input!(nickname, email, auth_key)
@@ -18,6 +21,9 @@ module Users
         @favorites = options[:favorites] || []
         @added = options[:added] || []
         @terms = options[:terms] || false
+        @last_login_time = options[:last_login_time] || nil
+        @last_login_address = options[:last_login_address] || nil
+        @login_count = options[:login_count] || 0 
       end
 
       def terms_accepted?
