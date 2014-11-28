@@ -15,8 +15,6 @@ module Users
       end
 
       def call
-        authenticate_user
-
         Result.new(:error => error, :uid => user_uid)
       end
 
@@ -27,13 +25,13 @@ module Users
       end
 
       def user_uid
-        return nil if @authenticator.kind_of?(Symbol)
-        @authenticator
+        return nil if authenticate_user.kind_of?(Symbol)
+        authenticate_user
       end
 
       def error
-        return nil if @authenticator.kind_of?(Integer)
-        @authenticator
+        return nil if authenticate_user.kind_of?(Integer)
+        authenticate_user
       end
 
       def nickname
@@ -50,9 +48,9 @@ module Users
 
       def ensure_valid_input!(input)
         input.each_pair do |key, value|
-          reason = "The given #{key} was blank or missing"
+          reason = "#{key} is blank or missing"
 
-          unless value.kind_of?(String) && !value.empty?
+          if value.nil? || value.empty?
             raise_argument_error(reason, value)
           end
         end
