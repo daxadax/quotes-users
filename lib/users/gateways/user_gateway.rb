@@ -108,8 +108,8 @@ module Users
             :terms => user.terms_accepted?,
             :favorites => JSON.dump(user.favorites),
             :added => JSON.dump(user.added),
-            :login_time => user.last_login_time,
-            :login_address => user.last_login_address,
+            :last_login_time => user.last_login_time,
+            :last_login_address => user.last_login_address,
             :login_count => user.login_count
           }
         end
@@ -125,8 +125,8 @@ module Users
             :terms => user[:terms] == '1' ? true : false,
             :favorites => JSON.parse(user[:favorites]),
             :added => JSON.parse(user[:added]),
-            :last_login_time => user[:login_time],
-            :last_login_address => user[:login_address],
+            :last_login_time => user[:last_login_time],
+            :last_login_address => user[:last_login_address],
             :login_count => user[:login_count]
           }
 
