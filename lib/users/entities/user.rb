@@ -23,7 +23,13 @@ module Users
         @terms = options[:terms] || false
         @last_login_time = options[:last_login_time] || nil
         @last_login_address = options[:last_login_address] || nil
-        @login_count = options[:login_count] || 0 
+        @login_count = options[:login_count] || 0
+      end
+
+      def update(updates)
+        update_user_values(updates)
+
+        self
       end
 
       def terms_accepted?
@@ -32,11 +38,17 @@ module Users
 
       private
 
+      def update_user_values(updates)
+        updates.each do |attribute, updated_value|
+          self.instance_variable_set "@#{attribute}", updated_value
+        end
+      end
+
       def ensure_valid_input!(nickname, email, auth_key)
         msg = 'Missing required input'
 
         raise_argument_error(msg, :nickname) if nickname.nil? || nickname.empty?
-        raise_argument_error(msg, :email)    if email.nil?    || email.empty?
+        raise_argument_error(msg, :email) if email.nil? || email.empty?
         raise_argument_error(msg, :auth_key) if auth_key.nil? || auth_key.empty?
       end
 
