@@ -24,8 +24,8 @@ class UpdateUserSpec < UseCaseSpec
 
       before { create_user(options_for_original_user) }
 
-      let(:result)              { use_case.call }
-      let(:loaded_user)   { gateway.get(result.uid) }
+      let(:result) { use_case.call }
+      let(:loaded_user) { gateway.get(result.uid) }
 
         describe 'with invalid arguments' do
             let(:auth_key) { '' }
