@@ -22,7 +22,7 @@ module Users
         return failure(:user_not_found) unless user
         return failure(:auth_failure) unless authentic?(user.nickname)
 
-        Result.new(:error => nil, :uid => update_user )
+        Result.new(:error => nil, :uid => update(user) )
       end
 
       private
@@ -36,22 +36,13 @@ module Users
         auth == uid ? true : false
       end
 
-      def update_user
-        user = build_user
+      def update(user)
+        if updates.has_key?(:auth_key)
+          updates[:auth_key] = BCrypt::Password.create updates[:auth_key]
+        end
+
+        user.update(updates)
         add_to_gateway user
-      end
-
-      def build_user
-        old_user = gateway.get(uid)
-
-        new_nickname  = updates.fetch(:nickname) { old_user.nickname }
-        new_email  = updates.delete(:email) { old_user.email }
-        new_auth_key = updates.delete(:auth_key) { old_user.auth_key }
-        new_options = updates.merge(:uid => old_user.uid)
-
-        new_auth_key = BCrypt::Password.create(new_auth_key)
-
-        Entities::User.new(new_nickname, new_email, new_auth_key, new_options)
       end
 
       def add_to_gateway(user)

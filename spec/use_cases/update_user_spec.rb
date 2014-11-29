@@ -16,9 +16,13 @@ class UpdateUserSpec < UseCaseSpec
     let(:use_case)  { UseCases::UpdateUser.new(input) }
 
     describe "call" do
-      before do
-        create_user :auth_key => BCrypt::Password.create('auth_key')
+      let(:options_for_original_user) do
+        {
+          :auth_key => BCrypt::Password.create('auth_key')
+        }
       end
+
+      before { create_user(options_for_original_user) }
 
       let(:result)              { use_case.call }
       let(:loaded_user)   { gateway.get(result.uid) }
@@ -71,7 +75,7 @@ class UpdateUserSpec < UseCaseSpec
               it 'can be updated' do
                 assert_nil result.error
                 assert_equal user_uid, result.uid
-                assert_equal BCrypt::Password.new(loaded_user.auth_key), "new auth_key" 
+                assert_equal BCrypt::Password.new(loaded_user.auth_key), "new auth_key"
               end
             end
 
@@ -84,6 +88,21 @@ class UpdateUserSpec < UseCaseSpec
                 assert_nil result.error
                 assert_equal user_uid, result.uid
                 assert_equal "new email", loaded_user.email
+              end
+            end
+
+            describe 'with unupdated existing optons' do
+              let(:options_for_original_user) do
+                {
+                  :auth_key => BCrypt::Password.create('auth_key'),
+                  :last_login_time => 1013
+                }
+              end
+
+              it 'does not overwrite them' do
+                assert_nil result.error
+                assert_equal user_uid, result.uid
+                assert_equal 1013, loaded_user.last_login_time
               end
             end
 
