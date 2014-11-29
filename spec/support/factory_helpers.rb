@@ -27,8 +27,8 @@ module Support
         :favorites => options[:favorities] || [],
         :added => options[:added] || [],
         :terms => true,
-        :last_login_time => options[:login_time] || 1234,
-        :last_login_address => options[:login_address] || '23.0.2.5',
+        :last_login_time => options[:last_login_time] || 1234,
+        :last_login_address => options[:last_login_address] || '23.0.2.5',
         :login_count => options[:login_count] || 23
       }
     end
