@@ -58,7 +58,7 @@ class UserGatewaySpec < Minitest::Spec
 
       fetched_user = gateway.fetch(user.nickname)
       assert_equal user.nickname, fetched_user.nickname
-      assert_equal user.email,    fetched_user.email
+      assert_equal user.email, fetched_user.email
       assert_equal user.auth_key, fetched_user.auth_key
     end
   end
