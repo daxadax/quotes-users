@@ -28,7 +28,6 @@ module Users
 
       def update(updates)
         update_user_values(updates)
-
         self
       end
 
