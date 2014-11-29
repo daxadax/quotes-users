@@ -91,6 +91,24 @@ class UpdateUserSpec < UseCaseSpec
               end
             end
 
+            describe 'login count' do
+              let(:options_for_original_user) do
+                {
+                  :auth_key => BCrypt::Password.create('auth_key'),
+                  :login_count => 2
+                }
+              end
+              let(:updates) do
+                {:update_login_count => true }
+              end
+
+              it 'updates the user\'s login count if given key is detected' do
+                assert_nil result.error
+                assert_equal user_uid, result.uid
+                assert_equal 3, loaded_user.login_count
+              end
+            end
+
             describe 'with unupdated existing optons' do
               let(:options_for_original_user) do
                 {

@@ -37,12 +37,20 @@ module Users
       end
 
       def update(user)
-        if updates.has_key?(:auth_key)
-          updates[:auth_key] = BCrypt::Password.create updates[:auth_key]
-        end
+        build_updated_auth_key if updates.has_key?(:auth_key)
+        increment_login_count(user) if updates.has_key?(:update_login_count)
 
         user.update(updates)
         add_to_gateway user
+      end
+
+      def build_updated_auth_key
+        updates[:auth_key] = BCrypt::Password.create updates[:auth_key]
+      end
+
+      def increment_login_count(user)
+        updates.delete(:update_login_count)
+        updates[:login_count] = user.login_count + 1
       end
 
       def add_to_gateway(user)
