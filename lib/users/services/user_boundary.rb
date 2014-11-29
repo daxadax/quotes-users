@@ -10,7 +10,10 @@ module Users
         :email,
         :favorites,
         :added_quotes,
-        :terms_accepted
+        :terms_accepted,
+        :last_login_time,
+        :last_login_address,
+        :login_count
       )
 
       def for(user)
@@ -26,7 +29,10 @@ module Users
           :email => user.email,
           :favorites => user.favorites,
           :added_quotes => user.added,
-          :terms_accepted => user.terms_accepted?
+          :terms_accepted => user.terms_accepted?,
+          :last_login_time => user.last_login_time,
+          :last_login_address => user.last_login_address,
+          :login_count => user.login_count
         )
       end
 

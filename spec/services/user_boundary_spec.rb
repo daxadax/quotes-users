@@ -28,4 +28,16 @@ class UserBoundarySpec < Minitest::Spec
   it "grants access to terms_accepted" do
     assert_equal user.terms_accepted?,  result.terms_accepted
   end
+
+  it 'grants access to last_login_time' do
+    assert_equal user.last_login_time, result.last_login_time
+  end
+
+  it 'grants access to last_login_address' do
+    assert_equal user.last_login_address, result.last_login_address
+  end
+
+  it 'grants access to login_count' do
+    assert_equal user.login_count, result.login_count
+  end
 end
