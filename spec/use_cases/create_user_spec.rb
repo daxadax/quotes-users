@@ -58,5 +58,14 @@ class CreateUserSpec < UseCaseSpec
       assert_equal 1, result.uid
     end
 
+    describe 'user with duplicate nickname' do
+      before { create_user }
+
+      it 'fails' do
+        assert_equal :duplicate_user, result.error
+        assert_nil result.uid
+      end
+    end
+
   end
 end

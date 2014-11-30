@@ -25,11 +25,13 @@ module Users
 
       def error
         return :invalid_input if invalid?
+        return :duplicate_user if duplicate?
         nil
       end
 
       def build_user_and_add_to_gateway
         return nil if invalid?
+        return nil if duplicate?
         user = build_user
         add_to_gateway user
       end
@@ -43,10 +45,23 @@ module Users
       end
 
       def invalid?
+        @invalid ||= determine_invalid?
+      end
+
+      def duplicate?
+        @duplciate ||= determine_duplicate?
+      end
+
+      def determine_invalid?
         [nickname, email, @auth_key].each do |required|
           return true if required.nil? || required.empty?
         end
         false
+      end
+
+      def determine_duplicate?
+        user = gateway.fetch nickname
+        user ? true : false
       end
 
       def nickname
