@@ -14,7 +14,8 @@ class UserSpec < Minitest::Spec
     it "has sane defaults for non-required arguments" do
       assert_nil user.uid
       assert_empty  user.favorites
-      assert_empty  user.added
+      assert_empty  user.added_quotes
+      assert_empty user.added_publications
       assert_equal  false, user.terms_accepted?
       assert_equal nil, user.last_login_time
       assert_equal nil, user.last_login_address
@@ -32,7 +33,10 @@ class UserSpec < Minitest::Spec
         {
           :uid => 1,
           :favorites => [23, 52, 99],
-          :added => [23],
+          :added => {
+            :quotes => [23],
+            :publications => [1, 3, 15]
+          },
           :terms => true,
           :last_login_time => Time.new(2000).to_i,
           :last_login_address => '23.0.2.5',
@@ -47,8 +51,10 @@ class UserSpec < Minitest::Spec
         assert_equal 1, user.uid
         assert_equal 3, user.favorites.size
         assert_equal [23, 52, 99], user.favorites
-        assert_equal 1, user.added.size
-        assert_equal [23], user.added
+        assert_equal 1, user.added_quotes.size
+        assert_equal [23], user.added_quotes
+        assert_equal 3, user.added_publications.size
+        assert_equal [1, 3, 15], user.added_publications
         assert_equal true, user.terms_accepted?
         assert_equal Time.new(2000).to_i, user.last_login_time
         assert_equal '23.0.2.5', user.last_login_address
@@ -67,7 +73,8 @@ class UserSpec < Minitest::Spec
       assert_equal user.nickname, result.nickname
       assert_equal user.auth_key, result.auth_key
       assert_equal user.favorites, result.favorites
-      assert_equal user.added, result.added
+      assert_equal user.added_quotes, result.added_quotes
+      assert_equal user.added_publications, result.added_publications
       assert_equal user.terms_accepted?, result.terms_accepted?
       assert_equal nil, result.last_login_time
       assert_equal nil, result.last_login_address
@@ -88,7 +95,8 @@ class UserSpec < Minitest::Spec
         assert_equal user.nickname, result.nickname
         assert_equal user.auth_key, result.auth_key
         assert_equal user.favorites, result.favorites
-        assert_equal user.added, result.added
+        assert_equal user.added_quotes, result.added_quotes
+        assert_equal user.added_publications, result.added_publications
         assert_equal user.terms_accepted?, result.terms_accepted?
         assert_equal Time.new(2005).to_i, result.last_login_time
         assert_equal '24.1.3.6', result.last_login_address

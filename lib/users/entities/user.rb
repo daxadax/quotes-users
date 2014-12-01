@@ -6,7 +6,6 @@ module Users
         :email,
         :auth_key,
         :favorites,
-        :added,
         :last_login_time,
         :last_login_address,
         :login_count
@@ -19,7 +18,7 @@ module Users
         @auth_key = auth_key
         @uid = options[:uid] || nil
         @favorites = options[:favorites] || []
-        @added = options[:added] || []
+        @added = options[:added] || Hash.new { |h,k| h[k] = [] }
         @terms = options[:terms] || false
         @last_login_time = options[:last_login_time] || nil
         @last_login_address = options[:last_login_address] || nil
@@ -33,6 +32,14 @@ module Users
 
       def terms_accepted?
         @terms
+      end
+
+      def added_quotes
+        @added[:quotes] || []
+      end
+
+      def added_publications
+        @added[:publications]
       end
 
       private
