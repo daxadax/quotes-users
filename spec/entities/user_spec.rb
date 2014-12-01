@@ -13,8 +13,8 @@ class UserSpec < Minitest::Spec
 
     it "has sane defaults for non-required arguments" do
       assert_nil user.uid
-      assert_empty  user.favorites
-      assert_empty  user.added_quotes
+      assert_empty user.favorites
+      assert_empty user.added_quotes
       assert_empty user.added_publications
       assert_equal  false, user.terms_accepted?
       assert_equal nil, user.last_login_time

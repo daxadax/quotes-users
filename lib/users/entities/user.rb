@@ -40,7 +40,7 @@ module Users
       end
 
       def added_publications
-        @added[:publications]
+        @added[:publications] || []
       end
 
       private
