@@ -82,32 +82,10 @@ class UserGatewaySpec < Minitest::Spec
     end
   end
 
-  describe 'publish_quote' do
-    let(:published_quote_uid) { 13 }
-
-    describe 'without a persisted object' do
-      let(:wrong_user_uid) { 90 }
-
-      it 'fails' do
-        assert_failure do
-          gateway.publish_quote(wrong_user_uid, published_quote_uid)
-        end
-      end
-    end
-
-    it 'adds the published quote to the :added array for the given user' do
-      user_uid = add_user
-      gateway.publish_quote(user_uid, published_quote_uid)
-      result = gateway.get(user_uid)
-
-      assert_includes result.added, published_quote_uid
-    end
-  end
-
   describe "all" do
     let(:user_two) { Entities::User.new('2', '2', '2') }
     let(:user_three) { Entities::User.new('3', '3', '3') }
-    let(:users)      { [user, user_two, user_three] }
+    let(:users) { [user, user_two, user_three] }
 
     it "returns an empty array if the backend is empty" do
       assert_empty gateway.all
@@ -117,10 +95,10 @@ class UserGatewaySpec < Minitest::Spec
       users.each {|user| gateway.add(user)}
       result = gateway.all
 
-      assert_equal 3,           result.size
-      assert_equal "nickname",  result[0].nickname
-      assert_equal "2",         result[1].nickname
-      assert_equal "3",         result[2].nickname
+      assert_equal 3, result.size
+      assert_equal "nickname", result[0].nickname
+      assert_equal "2", result[1].nickname
+      assert_equal "3", result[2].nickname
     end
   end
 

@@ -26,14 +26,6 @@ module Users
         @backend.update(serialized(user))
       end
 
-      def publish_quote(uid, quote_uid)
-        user = get(uid)
-        raise_argument_error('no user found', uid) unless user
-        user.added << quote_uid
-
-        @backend.update(serialized(user))
-      end
-
       def all
         @backend.all.map do |user|
           deserialize(user)
