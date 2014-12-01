@@ -5,6 +5,7 @@ module Users
         :nickname,
         :email,
         :auth_key,
+        :added,
         :favorites,
         :last_login_time,
         :last_login_address,
