@@ -25,7 +25,7 @@ module Support
         :email => options[:email] || 'email',
         :auth_key => options[:auth_key] || 'auth_key',
         :favorites => options[:favorities] || [],
-        :added => options[:added] || [],
+        :added => options[:added] || nil,
         :terms => true,
         :last_login_time => options[:last_login_time] || 1234,
         :last_login_address => options[:last_login_address] || '23.0.2.5',
