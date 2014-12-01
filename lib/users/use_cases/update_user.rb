@@ -13,7 +13,6 @@ module Users
         @uid = input[:uid]
         @updates = input[:updates]
         @auth_key = input[:auth_key]
-        @error = nil
       end
 
       def call
@@ -55,10 +54,6 @@ module Users
 
       def add_to_gateway(user)
         gateway.update user
-      end
-
-      def error
-          @error
       end
 
       def uid
