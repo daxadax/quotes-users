@@ -5,8 +5,9 @@ module Users
         :nickname,
         :email,
         :auth_key,
-        :added,
         :favorites,
+        :added_quotes,
+        :added_publications,
         :last_login_time,
         :last_login_address,
         :login_count
@@ -19,7 +20,8 @@ module Users
         @auth_key = auth_key
         @uid = options[:uid] || nil
         @favorites = options[:favorites] || []
-        @added = options[:added] || Hash.new { |h,k| h[k] = [] }
+        @added_quotes = options[:added_quotes] || []
+        @added_publications = options[:added_publications] || []
         @terms = options[:terms] || false
         @last_login_time = options[:last_login_time] || nil
         @last_login_address = options[:last_login_address] || nil
@@ -35,19 +37,13 @@ module Users
         @terms
       end
 
-      def added_quotes
-        added[:quotes]
-      end
-
-      def added_publications
-        added[:publications]
-      end
-
       def update_added(type, uid)
-        if added[type].include?(uid)
-          added[type].delete(uid)
+        added = eval("added_#{type}")
+
+        if added.include?(uid)
+          added.delete(uid)
         else
-          added[type] << uid
+          added << uid
         end
       end
 
@@ -57,10 +53,6 @@ module Users
         updates.each do |attribute, updated_value|
           self.instance_variable_set "@#{attribute}", updated_value
         end
-      end
-
-      def added
-        @added
       end
 
       def ensure_valid_input!(nickname, email, auth_key)

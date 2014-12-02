@@ -34,7 +34,8 @@ class UserGatewaySpec < Minitest::Spec
       assert_equal result.email, user.email
       assert_equal result.auth_key, user.auth_key
       assert_empty result.favorites
-      assert_empty result.added
+      assert_empty result.added_quotes
+      assert_empty result.added_publications
       assert_equal false, result.terms_accepted?
       assert_equal nil, result.last_login_time
       assert_equal nil, result.last_login_address

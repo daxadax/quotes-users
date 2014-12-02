@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 class UserSpec < Minitest::Spec
-  let(:options)   { {} }
-  let(:user)      { build_user(options) }
+  let(:options) { {} }
+  let(:user) { build_user(options) }
 
   describe 'construction' do
     it 'can be built with three arguments' do
-      assert_equal 'nickname',  user.nickname
-      assert_equal 'email',     user.email
-      assert_equal 'auth_key',  user.auth_key
+      assert_equal 'nickname', user.nickname
+      assert_equal 'email', user.email
+      assert_equal 'auth_key', user.auth_key
     end
 
     it "has sane defaults for non-required arguments" do
@@ -33,10 +33,8 @@ class UserSpec < Minitest::Spec
         {
           :uid => 1,
           :favorites => [23, 52, 99],
-          :added => {
-            :quotes => [23],
-            :publications => [1, 3, 15]
-          },
+          :added_quotes => [23],
+          :added_publications => [1, 3, 15],
           :terms => true,
           :last_login_time => Time.new(2000).to_i,
           :last_login_address => '23.0.2.5',

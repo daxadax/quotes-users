@@ -50,7 +50,8 @@ class CreateUserSpec < UseCaseSpec
       assert_equal 'email', loaded_user.email
       assert_equal BCrypt::Password.new(loaded_user.auth_key), "auth_key"
       assert_empty loaded_user.favorites
-      assert_empty loaded_user.added
+      assert_empty loaded_user.added_quotes
+      assert_empty loaded_user.added_publications
     end
 
     it "returns the uid of the newly created user on success" do

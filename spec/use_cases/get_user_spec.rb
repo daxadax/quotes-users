@@ -24,7 +24,8 @@ class GetUserSpec < UseCaseSpec
       assert_equal user.nickname, result.user.nickname
       assert_equal user.email, result.user.email
       assert_equal user.favorites, result.user.favorites
-      assert_equal user.added, result.user.added_quotes
+      assert_equal user.added_quotes, result.user.added_quotes
+      assert_equal user.added_publications, result.user.added_publications
       assert_equal user.terms_accepted?, result.user.terms_accepted
     end
   end
