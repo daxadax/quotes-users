@@ -106,4 +106,23 @@ class UserSpec < Minitest::Spec
 
   end
 
+  describe 'update_added' do
+    it 'adds or removes added quotes or publications from the user' do
+      assert_empty user.added_quotes
+      assert_empty user.added_publications
+
+      user.update_added(:quotes, 23)
+      user.update_added(:publications, 25)
+
+      assert_includes user.added_quotes, 23
+      assert_includes user.added_publications, 25
+
+      user.update_added(:quotes, 23)
+      user.update_added(:publications, 25)
+
+      assert_empty user.added_quotes
+      assert_empty user.added_publications
+    end
+  end
+
 end

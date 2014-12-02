@@ -36,11 +36,19 @@ module Users
       end
 
       def added_quotes
-        @added[:quotes] || []
+        added[:quotes]
       end
 
       def added_publications
-        @added[:publications] || []
+        added[:publications]
+      end
+
+      def update_added(type, uid)
+        if added[type].include?(uid)
+          added[type].delete(uid)
+        else
+          added[type] << uid
+        end
       end
 
       private
@@ -49,6 +57,10 @@ module Users
         updates.each do |attribute, updated_value|
           self.instance_variable_set "@#{attribute}", updated_value
         end
+      end
+
+      def added
+        @added
       end
 
       def ensure_valid_input!(nickname, email, auth_key)
