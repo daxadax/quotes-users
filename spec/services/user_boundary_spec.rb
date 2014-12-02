@@ -22,7 +22,11 @@ class UserBoundarySpec < Minitest::Spec
   end
 
   it "grants access to added_quotes" do
-    assert_equal user.added, result.added_quotes
+    assert_equal user.added_quotes, result.added_quotes
+  end
+
+  it "grants access to added_publications" do
+    assert_equal user.added_publications, result.added_publications
   end
 
   it "grants access to terms_accepted" do
