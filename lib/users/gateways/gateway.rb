@@ -12,7 +12,7 @@ module Users
       private
 
       def new_backend
-        Persistence::Gateways::UsersGatewayBackend.new
+        ServiceFactory.new.users_backend
       end
 
     end
